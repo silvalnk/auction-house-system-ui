@@ -1,0 +1,5 @@
+schema: planning
+created: 2026-10-01
+goal: Agrupar páginas e componentes Vue numa pasta ui, sem mudar o
+  comportamento do leilão.
+skip_specs: true
