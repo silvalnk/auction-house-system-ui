@@ -1,0 +1,5 @@
+schema: planning
+created: 2026-10-01
+goal: Separar o frontend Vue em camadas testáveis, sem mudar o comportamento do
+  leilão.
+skip_specs: true
