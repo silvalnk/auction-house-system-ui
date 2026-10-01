@@ -1,0 +1,127 @@
+name: planning
+version: 1
+description: Planejamento SDD — PRD, specs, RFC, C4, TRD e tasks
+
+artifacts:
+  - id: prd
+    generates: prd.md
+    description: Requisitos de produto e recorte do change
+    template: prd.md
+    instruction: |
+      Escreva o PRD em pt-BR. Mantenha os headings do template.
+
+      O PRD explica o problema, quem usa, o que este change entrega e o que fica
+      para changes posteriores. Não descreva classes, gems internas nem passos
+      de código.
+
+      A seção Capabilities é o contrato com as specs:
+      - New Capabilities: um caminho kebab-case por comportamento durável.
+        Cada item vira specs/<capability-path>/spec.md.
+      - Modified Capabilities: só capabilities já existentes em openspec/specs
+        cujo comportamento muda. Se não houver, escreva "Nenhuma."
+      - Não use nomes de tarefa (setup-rails, add-endpoint).
+      - Este change precisa declarar ao menos uma capability nova ou modificada.
+
+      Mantenha o documento objetivo, em torno de duas páginas.
+    requires: []
+
+  - id: specs
+    generates: "specs/**/*.md"
+    description: Contratos de comportamento do change
+    template: spec.md
+    instruction: |
+      Crie um spec por capability listada no PRD, em specs/<capability-path>/spec.md.
+      Spec é contrato de comportamento, não plano de implementação.
+
+      Inclua comportamento observável, entradas, saídas, erros e cenários testáveis.
+      Não inclua nomes de classe, gems, packs ou passos de código.
+
+      Capabilities novas começam com ## Purpose (uma ou duas frases, 50+ caracteres).
+      Não adicione ## Purpose em capability que já existe.
+
+      Operações de delta, com heading ##:
+      - ADDED Requirements
+      - MODIFIED Requirements (bloco completo do requisito atual)
+      - REMOVED Requirements (com Reason e Migration)
+      - RENAMED Requirements (FROM:/TO:)
+
+      Formato:
+      - ### Requirement: nome
+      - Texto normativo com SHALL ou MUST
+      - Descrição de cada requisito com no máximo 500 caracteres
+      - #### Scenario: nome (exatamente 4 hashtags)
+      - Cada requisito tem ao menos um cenário
+      - Passos do cenário com **WHEN** e **THEN**
+
+      Há pelo menos um arquivo de spec, salvo skip_specs: true no .openspec.yaml.
+    requires:
+      - prd
+
+  - id: rfc
+    generates: rfc.md
+    description: Decisões de arquitetura com alternativas
+    template: rfc.md
+    instruction: |
+      Escreva o RFC em pt-BR depois de ler o PRD e as specs.
+      Cada decisão registra status, escolha, alternativas rejeitadas e consequências.
+      Cubra bounded contexts, event sourcing, concorrência de lances, tempo real,
+      composição com dry-system e comunicação entre packs.
+      Adie Saga, Outbox e Unit of Work se o comportamento deste change não precisar deles.
+      Não reescreva os requisitos; aponte para prd.md e specs/.
+    requires:
+      - prd
+      - specs
+
+  - id: c4
+    generates: c4.md
+    description: Diagramas C4 em Mermaid
+    template: c4.md
+    instruction: |
+      Desenhe o sistema em três níveis Mermaid: C4Context, C4Container e C4Component.
+      O nível de componentes cobre só o recorte deste change.
+      Nomeie packs, banco, event store, canal de tempo real e a UI Inertia/Vue.
+      Feche com as regras de dependência entre packs.
+      Baseie os nomes nas decisões do RFC.
+    requires:
+      - rfc
+
+  - id: trd
+    generates: trd.md
+    description: Requisitos técnicos do recorte
+    template: trd.md
+    instruction: |
+      Escreva o TRD em pt-BR. Explique como implementar o recorte deste change
+      sem descer a linha de código.
+      Inclua packs, comandos, eventos de domínio, projeções, concorrência,
+      tempo real, persistência e estratégia de teste.
+      Separe o que este change implementa do que o RFC apenas reservou.
+      Aponte riscos no formato risco e mitigação.
+    requires:
+      - c4
+      - specs
+
+  - id: tasks
+    generates: tasks.md
+    description: Lista de implementação verificável
+    template: tasks.md
+    instruction: |
+      Quebre só o recorte deste change em tarefas verificáveis.
+
+      Siga o template. O apply lê checkbox no formato `- [ ]`.
+      Agrupe sob headings ## numerados.
+      Cada tarefa é `- [ ] X.Y descrição` e diz como verificar.
+      Tarefas cabem numa sessão e seguem a ordem de dependência.
+      Testes ficam no grupo que produz o comportamento, não num grupo final.
+      O grupo final só cobre integração do recorte.
+      Não inclua Saga, Outbox, pagamento nem fechamento de leilão se o TRD
+      os marcou como fora deste change.
+    requires:
+      - specs
+      - trd
+
+apply:
+  requires: [tasks]
+  tracks: tasks.md
+  instruction: |
+    Leia o contexto, execute as tarefas pendentes e marque cada uma ao concluir.
+    Pare se encontrar um bloqueio ou uma decisão que mude o comportamento especificado.
