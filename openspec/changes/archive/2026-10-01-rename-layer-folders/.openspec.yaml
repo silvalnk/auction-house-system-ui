@@ -1,0 +1,5 @@
+schema: planning
+created: 2026-10-01
+goal: Renomear as pastas application e infrastructure para data e infra no
+  frontend e no pack de leilões, sem mudar o comportamento do leilão.
+skip_specs: true
