@@ -1,0 +1,23 @@
+{
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@inertiajs/core": "^3.8.0",
+    "typescript": "^6.0.3",
+    "vite": "^8.3.2",
+    "vite-plugin-ruby": "^5.2.5",
+    "vitest": "^3.2.7",
+    "vue-tsc": "^3.3.11"
+  },
+  "scripts": {
+    "check": "vue-tsc -p tsconfig.app.json && tsc -p tsconfig.node.json",
+    "test": "vitest run --config vitest.config.ts"
+  },
+  "dependencies": {
+    "@inertiajs/vite": "^3.8.0",
+    "@inertiajs/vue3": "^3.8.0",
+    "@rails/actioncable": "^8.1.400",
+    "@vitejs/plugin-vue": "^6.0.9",
+    "vue": "^3.5.43"
+  }
+}
