@@ -1,0 +1,4 @@
+schema: planning
+created: 2026-10-01
+goal: Definir e recortar a casa de leilões ao vivo para o primeiro fluxo de
+  lance com event sourcing.
