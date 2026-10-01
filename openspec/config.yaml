@@ -1,0 +1,36 @@
+schema: planning
+
+context: |
+  Language: pt-BR
+  All artifacts must be written in pt-BR.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+  Product: casa de leilões em tempo real, para estudo de arquitetura.
+  Stack: Rails, Inertia.js, Vue, PostgreSQL, Action Cable.
+  Modularity: gem packs, packs-rails, packwerk. Um pack por bounded context.
+  Composition: dry-system e dry-auto_inject. Domínio sem dependência de Rails.
+  Use cases retornam dry-monads Result. Contratos com dry-validation.
+  Eventos: rails_event_store. Event sourcing no agregado de lance.
+  Padrões previstos: DDD, Clean Architecture, CQRS, optimistic concurrency,
+  Saga, Outbox, Unit of Work. Introduzir cada padrão só no change que precisa dele.
+  MVP deste repositório: leilão inglês, um lote por leilão, dinheiro em centavos BRL.
+  Pagamento externo é simulado. Sem multi-moeda e sem leilão holandês ou selado.
+
+rules:
+  prd:
+    - Separar visão do produto, escopo deste change e roadmap posterior
+    - Registrar premissas explícitas
+  specs:
+    - Comportamento observável apenas; sem classes, gems ou passos de implementação
+    - "Cenários em WHEN/THEN com o heading #### Scenario"
+  rfc:
+    - Cada decisão lista alternativas e consequência
+    - Não transformar padrão em requisito só porque está na lista de estudo
+  c4:
+    - "Três níveis: contexto, contêineres e componentes"
+    - Diagramas em Mermaid
+  trd:
+    - Amarrar decisões do RFC aos packs, eventos e consistência
+    - Marcar o que fica fora da implementação deste change
+  tasks:
+    - Cada tarefa cabe numa sessão e diz como verificar
+    - Implementar só o recorte deste change
